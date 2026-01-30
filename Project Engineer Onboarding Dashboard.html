@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Engineer Onboarding System</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Lucide React icons as inline components
+        const CheckCircle2 = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        );
+
+        const Circle = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+            </svg>
+        );
+
+        const ChevronDown = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        );
+
+        const ChevronRight = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        );
+
+        const BookOpen = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+        );
+
+        const Target = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+        );
+
+        const Calendar = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+        );
+
+        const FileText = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+        );
+
+        const Folder = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+        );
+
+        const Wrench = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+        );
+
+        const Award = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+        );
+
+        const AlertTriangle = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        );
+
+        const Menu = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        );
+
+        const X = ({ className }) => (
+            <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        );
+
+        // Simple storage polyfill using localStorage
+        window.storage = {
+            get: async (key) => {
+                const value = localStorage.getItem(key);
+                return value ? { key, value, shared: false } : null;
+            },
+            set: async (key, value) => {
+                localStorage.setItem(key, value);
+                return { key, value, shared: false };
+            },
+            delete: async (key) => {
+                localStorage.removeItem(key);
+                return { key, deleted: true, shared: false };
+            }
+        };
+
+        const ProjectEngineerOnboarding = () => {
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const [expandedItems, setExpandedItems] = useState({});
+            const [checkedItems, setCheckedItems] = useState({});
+            const [loading, setLoading] = useState(true);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+            // Load saved progress from storage
+            useEffect(() => {
+                const loadProgress = async () => {
+                    try {
+                        const result = await window.storage.get('pe-onboarding-progress');
+                        if (result && result.value) {
+                            setCheckedItems(JSON.parse(result.value));
+                        }
+                    } catch (error) {
+                        console.log('No saved progress found, starting fresh');
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+                loadProgress();
+            }, []);
+
+            // Save progress to storage
+            const saveProgress = async (newCheckedItems) => {
+                try {
+                    await window.storage.set('pe-onboarding-progress', JSON.stringify(newCheckedItems));
+                } catch (error) {
+                    console.error('Failed to save progress:', error);
+                }
+            };
+
+            const toggleChecked = (id) => {
+                const newChecked = { ...checkedItems, [id]: !checkedItems[id] };
+                setCheckedItems(newChecked);
+                saveProgress(newChecked);
+            };
+
+            const toggleExpanded = (id) => {
+                setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
+            };
+
+            const resetProgress = async () => {
+                if (window.confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                    setCheckedItems({});
+                    try {
+                        await window.storage.delete('pe-onboarding-progress');
+                    } catch (error) {
+                        console.error('Failed to delete progress:', error);
+                    }
+                }
+            };
+
+            // Calculate progress statistics
+            const calculateProgress = () => {
+                const sections = {
+                    preboarding: ['pb-1', 'pb-2', 'pb-3', 'pb-4', 'pb-5', 'pb-6'],
+                    day1: ['d1-1', 'd1-2', 'd1-3', 'd1-4'],
+                    week1: ['w1-1', 'w1-2', 'w1-3', 'w1-4', 'w1-5', 'w1-6', 'w1-7', 'w1-8'],
+                    weeks24: ['w2-1', 'w2-2', 'w2-3', 'w2-4', 'w2-5', 'w34-1', 'w34-2', 'w34-3', 'w34-4', 'w34-5', 'm1rev-1', 'm1rev-2', 'm1rev-3'],
+                    month1: ['m1-1', 'm1-2', 'm1-3', 'm1-4', 'm1-5', 'm1-6'],
+                    month2: ['m2-1', 'm2-2', 'm2-3', 'm2-4', 'm2-5'],
+                    month3: ['m3-1', 'm3-2', 'm3-3', 'm3-4', 'm3-5'],
+                    months23: ['mo2-1', 'mo2-2', 'mo2-3', 'mo2-4', 'mo2-5', 'mo2-6', 'mo3-1', 'mo3-2', 'mo3-3', 'mo3-4', 'mo3-5', 'final-1', 'final-2', 'final-3', 'final-4'],
+                    submittal: ['sub-1', 'sub-2', 'sub-3', 'sub-4'],
+                    changeOrder: ['co-1', 'co-2', 'co-3', 'co-4', 'co-5'],
+                    jobFolder: ['jf-1', 'jf-2', 'jf-3', 'jf-4', 'jf-5', 'jf-6', 'jf-7', 'jf-8'],
+                    handoff: ['hand-1', 'hand-2', 'hand-3', 'hand-4'],
+                    naming: ['name-1', 'name-2', 'name-3', 'name-4'],
+                    daily: ['daily-1', 'daily-2', 'daily-3', 'daily-4', 'daily-5', 'daily-6', 'daily-7', 'daily-8'],
+                    weekly: ['weekly-1', 'weekly-2', 'weekly-3', 'weekly-4', 'weekly-5']
+                };
+
+                const stats = {};
+                let totalItems = 0;
+                let totalChecked = 0;
+
+                Object.keys(sections).forEach(key => {
+                    const items = sections[key];
+                    const checked = items.filter(id => checkedItems[id]).length;
+                    stats[key] = { total: items.length, checked, percentage: Math.round((checked / items.length) * 100) };
+                    totalItems += items.length;
+                    totalChecked += checked;
+                });
+
+                stats.overall = { total: totalItems, checked: totalChecked, percentage: Math.round((totalChecked / totalItems) * 100) };
+                return stats;
+            };
+
+            const progress = calculateProgress();
+
+            const CheckableItem = ({ id, children, className = "" }) => (
+                <div 
+                    className={`flex items-start gap-3 p-2 hover:bg-blue-50 rounded cursor-pointer ${className}`}
+                    onClick={() => toggleChecked(id)}
+                >
+                    {checkedItems[id] ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    ) : (
+                        <Circle className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                    )}
+                    <span className={checkedItems[id] ? 'text-gray-500 line-through' : 'text-gray-700'}>
+                        {children}
+                    </span>
+                </div>
+            );
+
+            const ProgressBar = ({ percentage, label, showLabel = true }) => (
+                <div className="w-full">
+                    {showLabel && (
+                        <div className="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>{label}</span>
+                            <span className="font-semibold">{percentage}%</span>
+                        </div>
+                    )}
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div 
+                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                            style={{ width: `${percentage}%` }}
+                        />
+                    </div>
+                </div>
+            );
+
+            const CollapsibleSection = ({ id, title, children, icon: Icon }) => (
+                <div className="border border-gray-200 rounded-lg mb-4 overflow-hidden">
+                    <button
+                        onClick={() => toggleExpanded(id)}
+                        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                        <div className="flex items-center gap-3">
+                            {Icon && <Icon className="w-5 h-5 text-blue-600" />}
+                            <h3 className="font-semibold text-gray-800">{title}</h3>
+                        </div>
+                        {expandedItems[id] ? (
+                            <ChevronDown className="w-5 h-5 text-gray-600" />
+                        ) : (
+                            <ChevronRight className="w-5 h-5 text-gray-600" />
+                        )}
+                    </button>
+                    {expandedItems[id] && (
+                        <div className="p-4 bg-white">
+                            {children}
+                        </div>
+                    )}
+                </div>
+            );
+
+            const navigation = [
+                { id: 'dashboard', label: 'Dashboard', icon: Target },
+                { id: 'overview', label: 'Role Overview', icon: BookOpen },
+                { id: 'onboarding', label: 'Onboarding Plan', icon: Calendar },
+                { id: 'sops', label: 'SOPs & Checklists', icon: FileText },
+                { id: 'folders', label: 'Job Folders', icon: Folder },
+                { id: 'tools', label: 'Tools Training', icon: Wrench },
+                { id: 'success', label: 'Success Metrics', icon: Award },
+                { id: 'failures', label: 'Failure Prevention', icon: AlertTriangle },
+            ];
+
+            // Dashboard Section
+            const DashboardSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8 rounded-lg shadow-lg">
+                        <h1 className="text-3xl font-bold mb-2">Project Engineer Onboarding</h1>
+                        <p className="text-blue-100">Construction Industry - Drywall, Framing, Insulation, ACT</p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-600">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Overall Progress</h2>
+                        <ProgressBar percentage={progress.overall.percentage} label={`${progress.overall.checked} of ${progress.overall.total} items completed`} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">Pre-Boarding & Setup</h3>
+                            <ProgressBar percentage={progress.preboarding.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.preboarding.checked}/{progress.preboarding.total} tasks</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">Day 1 Orientation</h3>
+                            <ProgressBar percentage={progress.day1.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.day1.checked}/{progress.day1.total} tasks</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">Week 1 Foundation</h3>
+                            <ProgressBar percentage={progress.week1.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.week1.checked}/{progress.week1.total} tasks</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">Weeks 2-4 Execution</h3>
+                            <ProgressBar percentage={progress.weeks24.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.weeks24.checked}/{progress.weeks24.total} tasks</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">30-Day Milestones</h3>
+                            <ProgressBar percentage={progress.month1.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.month1.checked}/{progress.month1.total} goals</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">60-Day Milestones</h3>
+                            <ProgressBar percentage={progress.month2.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.month2.checked}/{progress.month2.total} goals</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">90-Day Milestones</h3>
+                            <ProgressBar percentage={progress.month3.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.month3.checked}/{progress.month3.total} goals</p>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-gray-700 mb-3">Months 2-3 Path</h3>
+                            <ProgressBar percentage={progress.months23.percentage} showLabel={false} />
+                            <p className="text-sm text-gray-600 mt-2">{progress.months23.checked}/{progress.months23.total} tasks</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                        <div className="flex items-start gap-3">
+                            <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                            <div>
+                                <h3 className="font-semibold text-amber-900 mb-1">Quick Tip</h3>
+                                <p className="text-amber-800 text-sm">
+                                    Your progress is automatically saved in your browser. Use the navigation menu to explore different sections and check off items as you complete them.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button
+                            onClick={resetProgress}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                        >
+                            Reset All Progress
+                        </button>
+                    </div>
+                </div>
+            );
+
+            // Role Overview Section
+            const OverviewSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Executive Overview</h2>
+                        <p className="text-gray-700 mb-4">
+                            The Project Engineer role is the organizational backbone between estimating and project management. This position ensures that projects transition smoothly from awarded estimate to active construction, maintains documentation integrity, and supports both teams with critical administrative and technical tasks.
+                        </p>
+                        
+                        <h3 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Why This Role Exists</h3>
+                        <p className="text-gray-700 mb-2">Construction projects fail when:</p>
+                        <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li>Information gets lost between estimating handoff and field execution</li>
+                            <li>Documents are scattered, mislabeled, or inaccessible when needed</li>
+                            <li>Submittals and change orders lack proper tracking and follow-through</li>
+                            <li>Project managers spend time on administrative tasks instead of managing work</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4">What You OWN</h3>
+                        <div className="space-y-4">
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="font-semibold text-gray-800">Job Folders</h4>
+                                <p className="text-gray-600 text-sm">Create, organize, and maintain standardized folder structures. Keep track of and organize bid schedule.</p>
+                            </div>
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="font-semibold text-gray-800">Document Control</h4>
+                                <p className="text-gray-600 text-sm">Maintain current versions of drawings, specs, and contracts</p>
+                            </div>
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="font-semibold text-gray-800">Submittal Tracking</h4>
+                                <p className="text-gray-600 text-sm">Log, track, and follow up on all submittals through approval</p>
+                            </div>
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="font-semibold text-gray-800">Change Order Documentation</h4>
+                                <p className="text-gray-600 text-sm">Compile backup, compare scope using OST and QuickBid, prepare complete packages</p>
+                            </div>
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="font-semibold text-gray-800">Estimate Handoff</h4>
+                                <p className="text-gray-600 text-sm">Transfer all files and knowledge from estimating to project folder</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4">What You SUPPORT</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-gray-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Estimating</h4>
+                                <p className="text-gray-600 text-sm">Organize bid documents, track opportunities, assist with handoff</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Project Management</h4>
+                                <p className="text-gray-600 text-sm">Schedule support, RFI documentation, photo organization</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Procurement</h4>
+                                <p className="text-gray-600 text-sm">Track deliveries, maintain vendor contacts, organize PO backup</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Client Relations</h4>
+                                <p className="text-gray-600 text-sm">Respond to routine requests, log communication</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                        <h3 className="text-xl font-semibold text-red-800 mb-3">What You DO NOT Do</h3>
+                        <ul className="list-disc list-inside space-y-2 text-red-700">
+                            <li>Final pricing decisions on estimates or change orders</li>
+                            <li>Contract negotiations or legal review</li>
+                            <li>Field scheduling and crew coordination</li>
+                            <li>Financial forecasting or budget variance analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+
+            // Onboarding Plan Section
+            const OnboardingSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Phased Onboarding Plan</h2>
+                        <p className="text-gray-700 mb-4">
+                            Track your progress through each phase of onboarding. Check off items as you complete them.
+                        </p>
+                    </div>
+
+                    <CollapsibleSection id="preboarding" title="Pre-Boarding (Before Day 1)" icon={Calendar}>
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-gray-700 mb-3">IT & Access Setup</h4>
+                            <CheckableItem id="pb-1">Create company email account</CheckableItem>
+                            <CheckableItem id="pb-2">Provision Microsoft 365 licenses (Outlook, Teams, SharePoint)</CheckableItem>
+                            <CheckableItem id="pb-3">Provide OnScreen Takeoff and QuickBid login credentials</CheckableItem>
+                            <CheckableItem id="pb-4">Set up Plaud account or meeting recording access</CheckableItem>
+                            <CheckableItem id="pb-5">Add to org chart and introduce via email</CheckableItem>
+                            
+                            <h4 className="font-semibold text-gray-700 mb-3 mt-6">Documentation Prepared</h4>
+                            <CheckableItem id="pb-6">List of active projects prepared with sample job folders</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.preboarding.percentage} label="Pre-boarding Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="day1" title="Day 1: Orientation & Access" icon={Calendar}>
+                        <div className="space-y-2">
+                            <CheckableItem id="d1-1">Can access email, Teams, SharePoint independently</CheckableItem>
+                            <CheckableItem id="d1-2">Knows where company's project folders are stored</CheckableItem>
+                            <CheckableItem id="d1-3">Understands reporting structure and manager's communication preferences</CheckableItem>
+                            <CheckableItem id="d1-4">Has reviewed manual and written down questions for Day 2</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.day1.percentage} label="Day 1 Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="week1" title="Week 1: Foundation Building" icon={Calendar}>
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-gray-700 mb-3">Key Accomplishments</h4>
+                            <CheckableItem id="w1-1">Created 1 complete job folder with supervision</CheckableItem>
+                            <CheckableItem id="w1-2">Logged 5 submittals in tracking system</CheckableItem>
+                            <CheckableItem id="w1-3">Prepared first change order package with backup</CheckableItem>
+                            <CheckableItem id="w1-4">Attended and documented 2 project meetings</CheckableItem>
+                            <CheckableItem id="w1-5">Learned job folder structure and naming conventions</CheckableItem>
+                            <CheckableItem id="w1-6">Studied submittal and change order SOPs</CheckableItem>
+                            <CheckableItem id="w1-7">Shadowed estimator organizing bid documents</CheckableItem>
+                            <CheckableItem id="w1-8">Completed end-of-week checkpoint meeting with manager</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.week1.percentage} label="Week 1 Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="weeks24" title="Weeks 2-4: Supervised Execution" icon={Calendar}>
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-gray-700 mb-3">Week 2: First Real Assignments</h4>
+                            <CheckableItem id="w2-1">Assigned 1 active project to assist PM with submittal tracking</CheckableItem>
+                            <CheckableItem id="w2-2">Created job folder for 1 newly awarded project (manager reviewed)</CheckableItem>
+                            <CheckableItem id="w2-3">Prepared 2 change order packages from start to finish</CheckableItem>
+                            <CheckableItem id="w2-4">Attended at least 2 project meetings and distributed action items</CheckableItem>
+                            <CheckableItem id="w2-5">Daily check-ins: 15 minutes each morning to review priorities</CheckableItem>
+
+                            <h4 className="font-semibold text-gray-700 mb-3 mt-6">Week 3-4: Increasing Independence</h4>
+                            <CheckableItem id="w34-1">Managed submittals for 2 projects: track, follow up, handle resubmittals</CheckableItem>
+                            <CheckableItem id="w34-2">Assisted with estimate handoffs: transferred 2 projects to project folders</CheckableItem>
+                            <CheckableItem id="w34-3">Proactive follow-up: sent reminder emails without being asked</CheckableItem>
+                            <CheckableItem id="w34-4">Error correction: documented lessons learned and adjusted process</CheckableItem>
+                            <CheckableItem id="w34-5">Weekly check-ins: 30 minutes every Friday to review progress</CheckableItem>
+
+                            <h4 className="font-semibold text-gray-700 mb-3 mt-6">End of Month 1 Review</h4>
+                            <CheckableItem id="m1rev-1">Formal performance review against 30-day success metrics completed</CheckableItem>
+                            <CheckableItem id="m1rev-2">Identified strengths and development areas</CheckableItem>
+                            <CheckableItem id="m1rev-3">Adjusted onboarding plan if needed (faster or slower pacing)</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.weeks24.percentage} label="Weeks 2-4 Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="30days" title="30-Day Success Indicators" icon={Award}>
+                        <div className="space-y-2">
+                            <CheckableItem id="m1-1">Can navigate SharePoint structure independently</CheckableItem>
+                            <CheckableItem id="m1-2">Has created 2-3 complete job folders correctly</CheckableItem>
+                            <CheckableItem id="m1-3">Can prepare basic change order package</CheckableItem>
+                            <CheckableItem id="m1-4">Can demonstrate OnScreen and QuickBid navigation independently</CheckableItem>
+                            <CheckableItem id="m1-5">Has full ownership of updating Bid Schedule</CheckableItem>
+                            <CheckableItem id="m1-6">File naming follows conventions 95%+ of the time</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.month1.percentage} label="30-Day Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="60days" title="60-Day Success Indicators" icon={Award}>
+                        <div className="space-y-2">
+                            <CheckableItem id="m2-1">Manages full submittal process for 2+ projects with minimal supervision</CheckableItem>
+                            <CheckableItem id="m2-2">Proactively follows up on pending approvals without prompts</CheckableItem>
+                            <CheckableItem id="m2-3">Identifies missing documentation before it causes delays</CheckableItem>
+                            <CheckableItem id="m2-4">Can prepare change orders independently</CheckableItem>
+                            <CheckableItem id="m2-5">Has suggested at least one process improvement</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.month2.percentage} label="60-Day Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="90days" title="90-Day Success Indicators" icon={Award}>
+                        <div className="space-y-2">
+                            <CheckableItem id="m3-1">Independently manages 5+ concurrent projects</CheckableItem>
+                            <CheckableItem id="m3-2">Anticipates needs and prepares materials before being asked</CheckableItem>
+                            <CheckableItem id="m3-3">Catches errors before they reach PM or client</CheckableItem>
+                            <CheckableItem id="m3-4">Can train new Project Engineers on core processes</CheckableItem>
+                            <CheckableItem id="m3-5">Has refined at least one SOP based on experience</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.month3.percentage} label="90-Day Progress" />
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="months23" title="Months 2-3: Path to Autonomy" icon={Calendar}>
+                        <div className="space-y-2">
+                            <h4 className="font-semibold text-gray-700 mb-3">Month 2 Focus Areas</h4>
+                            <CheckableItem id="mo2-1">Project Load: Manage documentation for 3-5 concurrent projects</CheckableItem>
+                            <CheckableItem id="mo2-2">Proactive Problem Solving: Identify issues before they escalate</CheckableItem>
+                            <CheckableItem id="mo2-3">Cross-Team Collaboration: Build relationships with estimators and PMs</CheckableItem>
+                            <CheckableItem id="mo2-4">Project turnover: Initiating and coordinating meetings between PMs and Estimators</CheckableItem>
+                            <CheckableItem id="mo2-5">System Refinement: Suggest improvements to templates or tracking systems</CheckableItem>
+                            <CheckableItem id="mo2-6">Manager reviews work weekly but does not check every deliverable</CheckableItem>
+
+                            <h4 className="font-semibold text-gray-700 mb-3 mt-6">Month 3 Focus Areas</h4>
+                            <CheckableItem id="mo3-1">Project Load: Manage 5+ projects with minimal supervision</CheckableItem>
+                            <CheckableItem id="mo3-2">Anticipate Needs: Prepare materials before requested</CheckableItem>
+                            <CheckableItem id="mo3-3">Ownership: Take responsibility for at least one process improvement initiative</CheckableItem>
+                            <CheckableItem id="mo3-4">Project turnover: Initiating and coordinating meetings between PMs and Estimators</CheckableItem>
+                            <CheckableItem id="mo3-5">Manager spot-checks quality but trusts independent execution</CheckableItem>
+
+                            <h4 className="font-semibold text-gray-700 mb-3 mt-6">End of 90 Days: Final Assessment</h4>
+                            <CheckableItem id="final-1">Comprehensive review against all success metrics completed</CheckableItem>
+                            <CheckableItem id="final-2">Feedback from project managers and estimators received</CheckableItem>
+                            <CheckableItem id="final-3">Readiness for full autonomy determined</CheckableItem>
+                            <CheckableItem id="final-4">Professional development goals set for next 6-12 months</CheckableItem>
+                        </div>
+                        <div className="mt-4 pt-4 border-t">
+                            <ProgressBar percentage={progress.months23.percentage} label="Months 2-3 Progress" />
+                        </div>
+                    </CollapsibleSection>
+                </div>
+            );
+
+            // SOPs Section
+            const SOPsSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Standard Operating Procedures</h2>
+                        <p className="text-gray-700">
+                            These SOPs define exactly how critical tasks are performed. Follow these processes until you understand them thoroughly enough to suggest improvements.
+                        </p>
+                    </div>
+
+                    <CollapsibleSection id="sop-submittal" title="SOP 1: Submittal Management Process" icon={FileText}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <p className="text-gray-700">Ensure all material submittals are properly documented, tracked, and approved before ordering or installation.</p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Step-by-Step Process</h4>
+                                <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                                    <li>Receive submittal request from PM or discover requirement in specs</li>
+                                    <li>Collect product data sheets, spec sections, test reports, and certifications</li>
+                                    <li>Create submittal cover sheet with project info and submittal number</li>
+                                    <li>Initiate shop drawing process with manufacturer/suppliers if applicable</li>
+                                    <li>Log submittal with: Number, Description, Spec Section, Dates, Status</li>
+                                    <li>Save package to Job Folder</li>
+                                    <li>Send to reviewer via email or their portal</li>
+                                    <li>Follow up if no response by required date (2 days before deadline)</li>
+                                    <li>Update status when response received</li>
+                                    <li>If approved: Save approved version, notify PM and procurement</li>
+                                    <li>If rejected: Note reasons, collect revised materials, resubmit</li>
+                                </ol>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Quality Control Checks</h4>
+                                <CheckableItem id="sub-1">Submittal package includes all required documents before sending</CheckableItem>
+                                <CheckableItem id="sub-2">Tracking log updated within 1 business day of status change</CheckableItem>
+                                <CheckableItem id="sub-3">File naming follows convention exactly</CheckableItem>
+                                <CheckableItem id="sub-4">PM notified of approval status before material ordered</CheckableItem>
+                            </div>
+
+                            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                                <h4 className="font-semibold text-amber-900 mb-2">Red Flags - When to Escalate</h4>
+                                <ul className="list-disc list-inside space-y-1 text-amber-800 text-sm">
+                                    <li>Reviewer hasn't responded 7+ days past required date</li>
+                                    <li>Submittal rejected 3+ times (may indicate spec misunderstanding)</li>
+                                    <li>Required information not available from supplier</li>
+                                    <li>Conflicting requirements between specs and contract</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="sop-changeorder" title="SOP 2: Change Order Preparation & Documentation" icon={FileText}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <p className="text-gray-700">Document scope changes accurately, provide backup for pricing, and submit complete packages that are easy to approve.</p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Step-by-Step Process</h4>
+                                <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                                    <li>Receive change order request from PM</li>
+                                    <li>Gather background: What triggered it? Related RFI/ASI? Affected drawings?</li>
+                                    <li>Pull original estimate from OnScreen/QuickBid</li>
+                                    <li>Upload new drawings to figure out difference in cost</li>
+                                    <li>Compare original vs. revised scope side-by-side</li>
+                                    <li>Assemble documentation: Summary, comparison, drawings, pricing, supporting docs</li>
+                                    <li>Save to Jobs List</li>
+                                    <li>Submit to PM and Estimator for review before sending to client</li>
+                                    <li>After PM approval, send to client with transmittal</li>
+                                    <li>Log in tracking system with all details</li>
+                                    <li>Follow up weekly if no response within 10 business days</li>
+                                </ol>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Quality Control Checks</h4>
+                                <CheckableItem id="co-1">Scope comparison clearly shows what changed</CheckableItem>
+                                <CheckableItem id="co-2">Pricing supported by takeoff or historical costs</CheckableItem>
+                                <CheckableItem id="co-3">All backup documents included and organized</CheckableItem>
+                                <CheckableItem id="co-4">PM and Estimator reviewed and approved before submission</CheckableItem>
+                                <CheckableItem id="co-5">Transmittal email is professional and references contract section</CheckableItem>
+                            </div>
+
+                            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                                <h4 className="font-semibold text-amber-900 mb-2">Red Flags - When to Escalate</h4>
+                                <ul className="list-disc list-inside space-y-1 text-amber-800 text-sm">
+                                    <li>Scope change large enough to affect schedule or other trades</li>
+                                    <li>Client disputes that work is a change</li>
+                                    <li>No backup documentation exists</li>
+                                    <li>Pricing significantly higher than typical unit costs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="sop-jobfolder" title="SOP 3: Job Folder Creation & Organization" icon={Folder}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <p className="text-gray-700">Learn standardized filing structure for every project so anyone can find documents quickly and consistently.</p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Complete Checklist</h4>
+                                <CheckableItem id="jf-1">Project awarded and notice received</CheckableItem>
+                                <CheckableItem id="jf-2">Created project folder in Jobs List</CheckableItem>
+                                <CheckableItem id="jf-3">Created standard subfolder structure using BCDI → _Template</CheckableItem>
+                                <CheckableItem id="jf-4">Transferred all bid documents from Active Bids</CheckableItem>
+                                <CheckableItem id="jf-5">Saved all material quotes</CheckableItem>
+                                <CheckableItem id="jf-6">Added Labor/Markup screenshots and stocking report</CheckableItem>
+                                <CheckableItem id="jf-7">Copied OnScreen takeoff file to Plans folder</CheckableItem>
+                                <CheckableItem id="jf-8">Deleted old Active Bids file and notified PM/Estimator</CheckableItem>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="sop-handoff" title="SOP 4: Estimate-to-Project Handoff Process" icon={FileText}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <p className="text-gray-700">Ensure smooth transition of information from estimating to project management so no details are lost.</p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Step-by-Step Process</h4>
+                                <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                                    <li>Schedule handoff meeting (Estimator, PM, Project Engineer, 30-60 min)</li>
+                                    <li>Use Plaud to record meeting for reference</li>
+                                    <li>Estimator presents: scope summary, exclusions, assumptions, key risks, vendor recommendations</li>
+                                    <li>PE documents: scope, exclusions, assumptions, risks, special contract terms, long lead times</li>
+                                    <li>PE completes handoff checklist (bid documents transferred, contract filed, drawings marked, key contacts created)</li>
+                                    <li>PE creates handoff summary document (1-2 pages)</li>
+                                    <li>Distribute summary to PM</li>
+                                </ol>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Quality Control Checks</h4>
+                                <CheckableItem id="hand-1">Handoff meeting attended by all key parties</CheckableItem>
+                                <CheckableItem id="hand-2">Notes captured and distributed within 24 hours</CheckableItem>
+                                <CheckableItem id="hand-3">PM confirms they understand scope and have what they need</CheckableItem>
+                                <CheckableItem id="hand-4">Handoff summary document is concise and accurate</CheckableItem>
+                            </div>
+
+                            <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                                <h4 className="font-semibold text-amber-900 mb-2">Red Flags - When to Escalate</h4>
+                                <ul className="list-disc list-inside space-y-1 text-amber-800 text-sm">
+                                    <li>PM expresses confusion about scope or contract terms after meeting</li>
+                                    <li>Estimating files are incomplete or missing critical information</li>
+                                    <li>Contract contains unfamiliar terms or requirements not typical for company</li>
+                                    <li>Long lead items do not align with schedule</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="sop-naming" title="SOP 5: File Naming & Document Control Standards" icon={FileText}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <p className="text-gray-700">Ensure files are named consistently so anyone can identify content and version at a glance.</p>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Examples by Document Type</h4>
+                                <div className="bg-gray-50 p-4 rounded space-y-2 text-sm">
+                                    <p><strong>Drawings:</strong> Current Drawings 1/30/2026</p>
+                                    <p><strong>Specifications:</strong> Current Specifications 1/30/2026</p>
+                                    <p><strong>Submittals:</strong> Make Pending folder and Approved folder</p>
+                                    <p><strong>RFIs:</strong> RFI01 -- Wall type clarification</p>
+                                    <p><strong>Change Orders:</strong> CO1 -- ASI 001</p>
+                                    <p><strong>Meeting Notes:</strong> Turnover Meeting 1/30/2026</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Version Control Rules</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                    <li>Use revision numbers for design documents: Rev1, Rev2, Rev3</li>
+                                    <li>Use dates for correspondence and submittals: YYYY-MM-DD format</li>
+                                    <li>Use status indicators: Draft, Submitted, Approved, Rejected</li>
+                                    <li>Never use 'Final' in file names (there's always another revision)</li>
+                                    <li>Archive old versions to 'Archive' subfolder</li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                                <h4 className="font-semibold text-red-900 mb-2">Forbidden Practices</h4>
+                                <ul className="list-disc list-inside space-y-1 text-red-800 text-sm">
+                                    <li>Never use vague names: 'document.pdf,' 'drawing.pdf'</li>
+                                    <li>Never use special characters: / \ ? * &lt; &gt; | " :</li>
+                                    <li>Never include personal identifiers: 'Jim's notes'</li>
+                                    <li>Never use 'V1,' 'V2' without context</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Quality Control Checks</h4>
+                                <CheckableItem id="name-1">File name includes project number</CheckableItem>
+                                <CheckableItem id="name-2">File name describes content without opening file</CheckableItem>
+                                <CheckableItem id="name-3">Version or date is included when relevant</CheckableItem>
+                                <CheckableItem id="name-4">No forbidden characters or spaces used</CheckableItem>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="sop-daily" title="Daily & Weekly Workflow Checklists" icon={Calendar}>
+                        <div className="space-y-4">
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3">Daily Tasks (Every Morning)</h4>
+                                <CheckableItem id="daily-1">Check email for urgent submittal or RFI responses</CheckableItem>
+                                <CheckableItem id="daily-2">Review submittal log: any approvals overdue?</CheckableItem>
+                                <CheckableItem id="daily-3">Check Teams for urgent PM requests</CheckableItem>
+                                <CheckableItem id="daily-4">Update bid schedule with incoming invitations</CheckableItem>
+                                <CheckableItem id="daily-5">Prioritize today's tasks</CheckableItem>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3 mt-6">Daily Tasks (End of Day)</h4>
+                                <CheckableItem id="daily-6">Update tracking logs with status changes</CheckableItem>
+                                <CheckableItem id="daily-7">File documents received today</CheckableItem>
+                                <CheckableItem id="daily-8">Send promised follow-ups or responses</CheckableItem>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-3 mt-6">Weekly Tasks (Friday Afternoon)</h4>
+                                <CheckableItem id="weekly-1">Review all submittal logs: identify items pending >10 days</CheckableItem>
+                                <CheckableItem id="weekly-2">Review all change order logs: follow up on pending approvals</CheckableItem>
+                                <CheckableItem id="weekly-3">Check project folders for missing/misfiled items</CheckableItem>
+                                <CheckableItem id="weekly-4">Update manager on week's accomplishments</CheckableItem>
+                                <CheckableItem id="weekly-5">Archive completed items to Archive folders</CheckableItem>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+                </div>
+            );
+
+            // Job Folders Section
+            const FoldersSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Job Folder & Documentation System</h2>
+                        <p className="text-gray-700 mb-4">
+                            The job folder system is the foundation of project organization. Every project uses the same structure so documents are always where you expect them.
+                        </p>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4">Standard 15-Folder Hierarchy</h3>
+                        <div className="space-y-3">
+                            {[
+                                { num: '01', name: 'Addenda', purpose: 'All amendments prior to bid time' },
+                                { num: '02', name: 'Change Orders', purpose: 'All COs, pricing backup, scope comparisons' },
+                                { num: '03', name: 'Closeout', purpose: 'Warranty, O&M manuals, inspections, lien releases' },
+                                { num: '04', name: 'Contract', purpose: 'Signed contract' },
+                                { num: '05', name: 'Correspondence', purpose: 'Emails, letters, formal communications' },
+                                { num: '06', name: 'Estimates', purpose: 'Original estimate files, labor/markup sheets' },
+                                { num: '07', name: 'Invoices', purpose: 'Material/Equipment invoices throughout job' },
+                                { num: '08', name: 'Material Quotes', purpose: 'All QuickBid quotes and email quotes' },
+                                { num: '09', name: 'Plans', purpose: 'All drawing sets and takeoff file' },
+                                { num: '10', name: 'RFIs-PRs-ASIs', purpose: 'Requests for information and responses' },
+                                { num: '11', name: 'Schedule', purpose: 'CPM schedule provided by GC' },
+                                { num: '12', name: 'SOV', purpose: 'Schedule of values' },
+                                { num: '13', name: 'Specifications', purpose: 'Project specs by division, addenda' },
+                                { num: '14', name: 'Spreadsheets', purpose: 'QuickBid reports, bid summary, stocking' },
+                                { num: '15', name: 'Submittals', purpose: 'All submittal packages by number' }
+                            ].map((folder) => (
+                                <div key={folder.num} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                                    <div className="bg-blue-600 text-white font-mono font-bold text-sm px-2 py-1 rounded flex-shrink-0">
+                                        {folder.num}
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-800">{folder.name}</h4>
+                                        <p className="text-gray-600 text-sm">{folder.purpose}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded">
+                        <h3 className="font-semibold text-amber-900 mb-2">Why This Structure Exists</h3>
+                        <p className="text-amber-800 text-sm mb-3">
+                            This system solves specific problems:
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 text-amber-800 text-sm">
+                            <li><strong>Multiple people need same files:</strong> Standard structure means everyone knows where to look</li>
+                            <li><strong>Document versions get confused:</strong> Separate folders and naming conventions prevent mix-ups</li>
+                            <li><strong>Contract disputes arise:</strong> Complete documentation provides backup and communication trail</li>
+                            <li><strong>Historical info hard to find:</strong> Estimate folder preserves original assumptions for future reference</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+
+            // Tools Section
+            const ToolsSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Tool-Specific Training Plans</h2>
+                        <p className="text-gray-700">
+                            The Project Engineer uses several software tools daily. Here's how to become proficient in each.
+                        </p>
+                    </div>
+
+                    <CollapsibleSection id="tool-onscreen" title="OnScreen Takeoff & QuickBid" icon={Wrench}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose for Project Engineer</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                                    <li>Reference original estimate for change order comparisons</li>
+                                    <li>Upload updated documents and conduct new takeoff/pricing</li>
+                                    <li>Price and write change orders for estimator/PM</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Week 1 Training Goals</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                    <li>Open existing takeoff files (.osx format)</li>
+                                    <li>Navigate drawings and locate specific areas</li>
+                                    <li>View quantities by item</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Month 2+ Training Goals</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                    <li>Perform complete linear and area takeoffs for change orders</li>
+                                    <li>Price change orders and review with PM/estimator</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Key Workflows</h4>
+                                <div className="bg-gray-50 p-3 rounded text-sm space-y-2">
+                                    <p><strong>For change order:</strong> Open original .osx file, locate affected area, perform new takeoff and pricing</p>
+                                </div>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="tool-microsoft" title="Microsoft 365 (Outlook, Teams, SharePoint)" icon={Wrench}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Primary Uses</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                                    <li><strong>Outlook:</strong> Email communication</li>
+                                    <li><strong>Teams:</strong> Quick collaboration and messages</li>
+                                    <li><strong>SharePoint:</strong> File storage and sharing</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Week 1 Setup</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                    <li>Set up Outlook folders for organization</li>
+                                    <li>Create email rules to auto-sort messages</li>
+                                    <li>Navigate SharePoint to locate project folders</li>
+                                    <li>Join relevant Teams channels</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Key Workflows</h4>
+                                <div className="bg-gray-50 p-3 rounded text-sm space-y-2">
+                                    <p><strong>When submittal arrives:</strong> Save to project folder, send email to PM with link</p>
+                                    <p><strong>When sending large files:</strong> Use SharePoint link instead of email attachment</p>
+                                </div>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+
+                    <CollapsibleSection id="tool-plaud" title="Plaud (Meeting Notes)" icon={Wrench}>
+                        <div className="space-y-4">
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h4 className="font-semibold text-gray-800 mb-2">Purpose</h4>
+                                <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                                    <li>Record project meetings for accurate documentation</li>
+                                    <li>Capture action items and decisions</li>
+                                    <li>Reduce note-taking burden during discussions</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h4 className="font-semibold text-gray-800 mb-2">Key Workflows</h4>
+                                <div className="bg-gray-50 p-3 rounded text-sm space-y-2">
+                                    <p><strong>Before meeting:</strong> Test device, ensure battery charged</p>
+                                    <p><strong>At start:</strong> Announce recording, get verbal consent</p>
+                                    <p><strong>After (within 24hrs):</strong> Review recording, create notes with action items, distribute</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-amber-50 border-l-4 border-amber-500 p-3 rounded">
+                                <p className="text-amber-900 text-sm font-semibold mb-1">Best Practice</p>
+                                <p className="text-amber-800 text-sm">Store recordings in Correspondence folder and highlight action items in meeting notes summary</p>
+                            </div>
+                        </div>
+                    </CollapsibleSection>
+                </div>
+            );
+
+            // Success Metrics Section
+            const SuccessSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Success Metrics</h2>
+                        <p className="text-gray-700">
+                            Clear, measurable indicators of performance at each milestone.
+                        </p>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-600 p-6 rounded-lg">
+                        <h3 className="text-xl font-semibold text-green-900 mb-4">30-Day Success Indicators</h3>
+                        
+                        <h4 className="font-semibold text-green-800 mb-2 mt-4">Knowledge & Systems</h4>
+                        <ul className="list-disc list-inside space-y-1 text-green-900 text-sm ml-4">
+                            <li>Can navigate SharePoint structure independently</li>
+                            <li>Understands standard job folder template</li>
+                            <li>Has completed all tool access setup</li>
+                            <li>Can demonstrate OnScreen and QuickBid navigation</li>
+                            <li>Has full ownership of updating Bid Schedule</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-green-800 mb-2 mt-4">Execution & Deliverables</h4>
+                        <ul className="list-disc list-inside space-y-1 text-green-900 text-sm ml-4">
+                            <li>Successfully created 2-3 complete job folders</li>
+                            <li>Logged at least 5 submittals correctly</li>
+                            <li>Can prepare basic change order package</li>
+                            <li>Assisted with one estimate-to-project handoff</li>
+                            <li>Takes clear meeting notes within 24 hours</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-green-800 mb-2 mt-4">Quality Standards</h4>
+                        <ul className="list-disc list-inside space-y-1 text-green-900 text-sm ml-4">
+                            <li>File naming follows conventions 95%+ of time</li>
+                            <li>Submittals include all backup documents</li>
+                            <li>No major folder structure errors requiring rework</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-600 p-6 rounded-lg">
+                        <h3 className="text-xl font-semibold text-blue-900 mb-4">60-Day Success Indicators</h3>
+                        
+                        <h4 className="font-semibold text-blue-800 mb-2 mt-4">Independence</h4>
+                        <ul className="list-disc list-inside space-y-1 text-blue-900 text-sm ml-4">
+                            <li>Manages full submittal process for 2+ projects with minimal supervision</li>
+                            <li>Proactively follows up on pending approvals</li>
+                            <li>Identifies missing documentation before delays</li>
+                            <li>Prepares change orders independently</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-blue-800 mb-2 mt-4">System Improvements</h4>
+                        <ul className="list-disc list-inside space-y-1 text-blue-900 text-sm ml-4">
+                            <li>Has suggested at least one process improvement</li>
+                            <li>Recognizes patterns and adjusts workflow</li>
+                            <li>Helps train others when asked</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-blue-800 mb-2 mt-4">Cross-Team Value</h4>
+                        <ul className="list-disc list-inside space-y-1 text-blue-900 text-sm ml-4">
+                            <li>PMs request support by name</li>
+                            <li>Estimators report clean handoffs</li>
+                            <li>No critical documents lost or misfiled</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-600 p-6 rounded-lg">
+                        <h3 className="text-xl font-semibold text-purple-900 mb-4">90-Day Success Indicators</h3>
+                        
+                        <h4 className="font-semibold text-purple-800 mb-2 mt-4">Full Competency</h4>
+                        <ul className="list-disc list-inside space-y-1 text-purple-900 text-sm ml-4">
+                            <li>Independently manages 5+ concurrent projects</li>
+                            <li>Anticipates needs before being asked</li>
+                            <li>Catches errors before they reach PM or client</li>
+                            <li>Serves as go-to for document retrieval</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-purple-800 mb-2 mt-4">Process Ownership</h4>
+                        <ul className="list-disc list-inside space-y-1 text-purple-900 text-sm ml-4">
+                            <li>Can train new Project Engineers</li>
+                            <li>Has refined at least one SOP</li>
+                            <li>Maintains tracking logs without reminders</li>
+                        </ul>
+
+                        <h4 className="font-semibold text-purple-800 mb-2 mt-4">Strategic Impact</h4>
+                        <ul className="list-disc list-inside space-y-1 text-purple-900 text-sm ml-4">
+                            <li>PMs report measurable time savings</li>
+                            <li>Zero missing documents causing delays</li>
+                            <li>Change order turnaround reduced 20%+</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+                        <h3 className="text-xl font-semibold text-red-900 mb-4">Red Flags (What Indicates Struggle)</h3>
+                        <p className="text-red-800 text-sm mb-3">If any of these patterns emerge, immediate coaching is needed:</p>
+                        <ul className="list-disc list-inside space-y-1 text-red-900 text-sm ml-4">
+                            <li>Repeated file naming errors after 30 days</li>
+                            <li>Submittals consistently missing backup documents</li>
+                            <li>Inability to locate documents without help after 45 days</li>
+                            <li>Frequent last-minute scrambles due to poor tracking</li>
+                            <li>Project managers avoid delegating to this person</li>
+                            <li>Reluctance to ask clarifying questions</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+
+            // Failure Prevention Section
+            const FailuresSection = () => (
+                <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Common Failure Points & Prevention</h2>
+                        <p className="text-gray-700">
+                            These are patterns that consistently cause problems. Recognize and prevent them early.
+                        </p>
+                    </div>
+
+                    {[
+                        {
+                            title: 'Failure Point #1: Inconsistent File Naming',
+                            symptoms: [
+                                'Files have vague names like "document.pdf"',
+                                'Inconsistent use of underscores, dashes, spaces',
+                                'Version numbers missing or inconsistent',
+                                'Project numbers missing from file names'
+                            ],
+                            why: 'Poor file naming makes it impossible to find documents quickly. When a PM needs a drawing during a client call, they can\'t afford to open 5 files to find the right one.',
+                            prevention: [
+                                'Provide written examples for every document type',
+                                'Review file names in first 30 days',
+                                'Create reference sheet at desk',
+                                'Set up file templates with correct naming'
+                            ]
+                        },
+                        {
+                            title: 'Failure Point #2: Missing Submittal Backup',
+                            symptoms: [
+                                'Submittals sent without product data or specs',
+                                'Architect rejects immediately due to incomplete package',
+                                'PE doesn\'t realize what\'s missing until rejection'
+                            ],
+                            why: 'Incomplete submittals waste time and delay projects. Each rejection adds 1-2 weeks. Material deliveries get pushed back, affecting schedule.',
+                            prevention: [
+                                'Create submittal checklist',
+                                'Review specs together to identify requirements',
+                                'Have PM review first 5 submittals',
+                                'Keep "good example" submittals as reference'
+                            ]
+                        },
+                        {
+                            title: 'Failure Point #3: No Follow-Up on Overdue Items',
+                            symptoms: [
+                                'Submittal log shows items "Under Review" for 15+ days',
+                                'Change orders pending for weeks with no status update',
+                                'PE waits for responses rather than chasing them'
+                            ],
+                            why: 'Architects and GCs are managing dozens of projects. Your items will sit at bottom of list unless you remind them. Delays compound.',
+                            prevention: [
+                                'Establish follow-up rule: reminder 2 days before due date',
+                                'Block 30 minutes every Friday to review logs',
+                                'Provide email templates for follow-ups',
+                                'Calendar follow-ups when submitting items'
+                            ]
+                        },
+                        {
+                            title: 'Failure Point #4: Poor Change Order Documentation',
+                            symptoms: [
+                                'Change order without clear scope comparison',
+                                'Pricing appears arbitrary',
+                                'Supporting documents missing',
+                                'Client pushes back hard on pricing'
+                            ],
+                            why: 'Poorly documented COs get rejected or negotiated down significantly. They damage credibility and make future COs battles.',
+                            prevention: [
+                                'Never send without explicit scope comparison',
+                                'Always pull original estimate for reference',
+                                'Include "why this is a change" narrative',
+                                'Have estimator review pricing for first 10 COs'
+                            ]
+                        },
+                        {
+                            title: 'Failure Point #5: Disorganized Estimate Handoff',
+                            symptoms: [
+                                'PM discovers critical scope details weren\'t communicated',
+                                'Exclusions weren\'t documented',
+                                'Vendor pricing assumptions not recorded',
+                                'PM frustrated: "don\'t know what was bid"'
+                            ],
+                            why: 'Projects get off track immediately. PMs make wrong assumptions, costs overrun, scope creep occurs.',
+                            prevention: [
+                                'Always schedule formal handoff meeting',
+                                'Use Plaud to record meeting',
+                                'Create written summary within 24 hours',
+                                'Don\'t consider complete until PM confirms'
+                            ]
+                        },
+                        {
+                            title: 'Failure Point #6: Reactive Instead of Proactive',
+                            symptoms: [
+                                'PE only acts when PM directly requests',
+                                'Problems discovered too late',
+                                'Tracking logs not maintained until asked',
+                                'No anticipation: materials needed "urgently"'
+                            ],
+                            why: 'Reactive PEs are bottlenecks that create stress and firefighting. Proactive PEs make projects run smoothly.',
+                            prevention: [
+                                'Build and use daily/weekly workflow checklist',
+                                'Review schedules to anticipate needs',
+                                'Calendar follow-ups when submitting items',
+                                'Ask PMs weekly: "What\'s coming up?"'
+                            ]
+                        }
+                    ].map((failure, idx) => (
+                        <div key={idx} className="bg-white border-l-4 border-red-500 rounded-lg shadow-md overflow-hidden">
+                            <div className="bg-red-50 p-4">
+                                <h3 className="text-lg font-semibold text-red-900">{failure.title}</h3>
+                            </div>
+                            <div className="p-6 space-y-4">
+                                <div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Symptoms</h4>
+                                    <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                        {failure.symptoms.map((symptom, i) => (
+                                            <li key={i}>{symptom}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="bg-amber-50 p-3 rounded">
+                                    <h4 className="font-semibold text-amber-900 mb-2">Why It Matters</h4>
+                                    <p className="text-amber-800 text-sm">{failure.why}</p>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-semibold text-gray-800 mb-2">Prevention Strategies</h4>
+                                    <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm ml-4">
+                                        {failure.prevention.map((strategy, i) => (
+                                            <li key={i}>{strategy}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+
+            const renderSection = () => {
+                switch(activeSection) {
+                    case 'dashboard': return <DashboardSection />;
+                    case 'overview': return <OverviewSection />;
+                    case 'onboarding': return <OnboardingSection />;
+                    case 'sops': return <SOPsSection />;
+                    case 'folders': return <FoldersSection />;
+                    case 'tools': return <ToolsSection />;
+                    case 'success': return <SuccessSection />;
+                    case 'failures': return <FailuresSection />;
+                    default: return <DashboardSection />;
+                }
+            };
+
+            if (loading) {
+                return (
+                    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                            <p className="text-gray-600">Loading your onboarding progress...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="min-h-screen bg-gray-100">
+                    {/* Mobile Header */}
+                    <div className="lg:hidden bg-blue-600 text-white p-4 flex items-center justify-between">
+                        <h1 className="text-xl font-bold">PE Onboarding</h1>
+                        <button
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="p-2 hover:bg-blue-700 rounded"
+                        >
+                            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        </button>
+                    </div>
+
+                    <div className="flex">
+                        {/* Sidebar */}
+                        <div className={`
+                            fixed lg:static inset-0 z-50 lg:z-0
+                            w-64 bg-white border-r border-gray-200 
+                            transform transition-transform duration-300
+                            ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                            overflow-y-auto
+                        `}>
+                            <div className="p-6 border-b border-gray-200 hidden lg:block">
+                                <h1 className="text-xl font-bold text-gray-800">Project Engineer</h1>
+                                <p className="text-sm text-gray-600">Onboarding System</p>
+                            </div>
+                            
+                            <nav className="p-4">
+                                {navigation.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => {
+                                                setActiveSection(item.id);
+                                                setMobileMenuOpen(false);
+                                            }}
+                                            className={`
+                                                w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors
+                                                ${activeSection === item.id 
+                                                    ? 'bg-blue-600 text-white' 
+                                                    : 'text-gray-700 hover:bg-gray-100'
+                                                }
+                                            `}
+                                        >
+                                            <Icon className="w-5 h-5" />
+                                            <span className="font-medium">{item.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </nav>
+
+                            <div className="p-4 border-t border-gray-200">
+                                <div className="bg-gray-50 p-3 rounded-lg">
+                                    <p className="text-xs text-gray-600 mb-1">Overall Progress</p>
+                                    <ProgressBar percentage={progress.overall.percentage} showLabel={false} />
+                                    <p className="text-xs text-gray-600 mt-1">{progress.overall.checked} of {progress.overall.total} items</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile Overlay */}
+                        {mobileMenuOpen && (
+                            <div 
+                                className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                                onClick={() => setMobileMenuOpen(false)}
+                            />
+                        )}
+
+                        {/* Main Content */}
+                        <div className="flex-1 overflow-y-auto">
+                            <div className="max-w-5xl mx-auto p-6 lg:p-8">
+                                {renderSection()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ProjectEngineerOnboarding />);
+    </script>
+</body>
+</html>
